@@ -1,51 +1,54 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import streamlit as st
-from streamlit.logger import get_logger
 
-LOGGER = get_logger(__name__)
+def cesar_cipher_encode(text, shift):
+  """
+  Fonction pour encoder un texte avec le chiffrement César.
 
+  Args:
+    text (str): Le texte à encoder.
+    shift (int): Le décalage du chiffrement.
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+  Returns:
+    str: Le texte chiffré.
+  """
+  alphabet = "abcdefghijklmnopqrstuvwxyz"
+  encoded_text = ""
 
-    st.write("# Welcome to Streamlit! 👋")
+  for char in text:
+    if char in alphabet:
+      index = alphabet.index(char)
+      new_index = (index + shift) % len(alphabet)
+      encoded_text += alphabet[new_index]
+    else:
+      encoded_text += char
 
-    st.sidebar.success("Select a demo above.")
+  return encoded_text
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+def cesar_cipher_decode(text, shift):
+  """
+  Fonction pour décoder un texte avec le chiffrement César.
 
+  Args:
+    text (str): Le texte chiffré à décoder.
+    shift (int): Le décalage du chiffrement.
 
-if __name__ == "__main__":
-    run()
+  Returns:
+    str: Le texte déchiffré.
+  """
+  return cesar_cipher_encode(text, -shift)
+
+st.title("Chiffrement et déchiffrement César")
+
+st.markdown("Entrez un mot de passe à crypter ou à décrypter :")
+password = st.text_input("Mot de passe", "")
+
+st.markdown("Entrez le décalage du chiffrement :")
+shift = st.number_input("Décalage", min_value=-25, max_value=25, value=0)
+
+st.markdown("**Chiffrement :**")
+encrypted_password = cesar_cipher_encode(password, shift)
+st.write(encrypted_password)
+
+st.markdown("**Déchiffrement :**")
+decrypted_password = cesar_cipher_decode(encrypted_password, shift)
+st.write(decrypted_password)
